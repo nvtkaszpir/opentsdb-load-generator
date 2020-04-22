@@ -1,16 +1,21 @@
 # opentsdb-load-generator
 
-### Overview
-opentsdb-load-generator is a simple tool for load-testing Opentsdb. It can generate and push large amount of data to the Opentsdb. Currently, it uses `telnet` based put request
+## Overview
 
-### Compile from source
+opentsdb-load-generator is a simple tool for load-testing Opentsdb.
+It can generate and push large amount of data to the Opentsdb.
+Currently, it uses `telnet` based put request
+
+## Compile from source
 
 ```go
 go get github.com/staticmukesh/opentsdb-load-generator
 ```
+
 The `opentsdb-load-generator` binary should now be available at `$GOPATH/bin`/opentsdb-load-generator
 
-### Usage
+## Usage
+
 ```bash
 $ ./opentsdb-load-generator --help
 Usage of ./opentsdb-load-generator:
@@ -25,6 +30,7 @@ Usage of ./opentsdb-load-generator:
 ```
 
 e.g. to push data at the rate of 10k datapoints per second on 10 connections, use the following command:
+
 ```bash
 $ ./opentsdb-load-generator -conn=5 -rate=10000
 2017/01/24 21:57:46 Conn No: 0, connected to localhost:4242
@@ -39,8 +45,26 @@ $ ./opentsdb-load-generator -conn=5 -rate=10000
 2017/01/24 21:57:47 Pushed 2000 data points in last 1 second on Conn: 4
 ```
 
-### Contributing
+## Kubernetes
+
+See example `k8s/deployment.yaml`.
+Adjust env vars, similiar to `Usage` section:
+
+-  `CONN` - number of connections to opentsdb backend
+-  `METRIC` - metric name, default is pod name
+-  `RATE` - Number of data points per second to be send
+-  `TSDB` - opentsdb service name
+
+```bash
+kubectl apply -f k8s/deployment.yaml
+kubectl scale deployment opentsdb-load-generator --replicas 30
+``` 
+
+
+## Contributing
+
 Feel free to raise PR for any feature improvement or issue.
 
-### License
+## License
+
 Copyright (c) 2017 Mukesh Sharma. Licensed under the MIT License.

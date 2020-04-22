@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/name: opentsdb-load-generator
+  name: opentsdb-load-generator
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: opentsdb-load-generator
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: opentsdb-load-generator
+    spec:
+      containers:
+      - env:
+        - name: CONN
+          value: "1"
+        - name: RATE
+          value: "1000"
+        - name: METRIC
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: TSDB
+          value: "opentsdb:4242"
+        image: quay.io/kaszpir/opentsdb-load-generator:docker
+        imagePullPolicy: IfNotPresent
+        name: opentsdb-load-generator
